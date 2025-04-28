@@ -1,0 +1,48 @@
+name: Create KPTA Board
+
+on:
+  # 手動実行またはリポジトリの作成時に実行
+  workflow_dispatch:
+    inputs:
+      template_mode:
+        description: "テンプレートモードで実行（APIは呼び出さない）"
+        required: false
+        type: boolean
+        default: false
+  push:
+    branches:
+      - main
+    paths:
+      - "README.md"
+      - "setup-guide.md"
+      - "column-templates.md"
+      - "best-practices.md"
+
+jobs:
+  create-kpta-board:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      repository-projects: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: Create KPTA board (テンプレートモード)
+        if: ${{ github.event.inputs.template_mode == 'true' }}
+        run: node create-kpta-board.js --template
+
+      - name: Create KPTA board (実際に作成)
+        if: ${{ github.event.inputs.template_mode != 'true' }}
+        run: node create-kpta-board.js ${{ github.repository_owner }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}

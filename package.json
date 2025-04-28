@@ -1,0 +1,14 @@
+{
+  "name": "kpta-board",
+  "version": "1.0.0",
+  "description": "GitHubプロジェクトを使ったKPTAボード",
+  "main": "create-kpta-board.js",
+  "scripts": {
+    "create-board": "node create-kpta-board.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/graphql": "^5.0.5"
+  }
+}
